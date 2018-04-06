@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "425659457710",
+    "firebase_url": "https://innocrypt-messager.firebaseio.com",
+    "project_id": "innocrypt-messager",
+    "storage_bucket": "innocrypt-messager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425659457710:android:928342e119ecaa46",
+        "android_client_info": {
+          "package_name": "com.sansara.develop.innocrypt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425659457710-hoiikgn7ra1vc3dggqbbs85vf7r7iutn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sansara.develop.innocrypt",
+            "certificate_hash": "50c52438478528549c1bd087d883a30015549f47"
+          }
+        },
+        {
+          "client_id": "425659457710-m8uf48nfg6pvi9sgbumheqd207gsrc17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrp1SKy6CI5e0IiypuHMHelQldP6B9PB4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425659457710-m8uf48nfg6pvi9sgbumheqd207gsrc17.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
