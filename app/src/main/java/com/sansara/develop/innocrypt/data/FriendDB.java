@@ -11,6 +11,18 @@ import com.sansara.develop.innocrypt.model.Friend;
 import com.sansara.develop.innocrypt.model.ListFriend;
 
 public final class FriendDB {
+    private static final String TEXT_TYPE = " TEXT";
+    private static final String COMMA_SEP = ",";
+    private static final String SQL_CREATE_ENTRIES =
+            "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
+                    FeedEntry.COLUMN_NAME_ID + " TEXT PRIMARY KEY," +
+                    FeedEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+                    FeedEntry.COLUMN_NAME_EMAIL + TEXT_TYPE + COMMA_SEP +
+                    FeedEntry.COLUMN_NAME_ID_ROOM + TEXT_TYPE + COMMA_SEP +
+                    FeedEntry.COLUMN_NAME_AVATA + TEXT_TYPE + " )";
+    private static final String SQL_DELETE_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
+
     private static FriendDBHelper mDbHelper = null;
 
     // To prevent someone from accidentally instantiating the contract class,
@@ -19,6 +31,7 @@ public final class FriendDB {
     }
 
     private static FriendDB instance = null;
+
 
     public static FriendDB getInstance(Context context) {
         if (instance == null) {
@@ -42,9 +55,8 @@ public final class FriendDB {
         return db.insert(FeedEntry.TABLE_NAME, null, values);
     }
 
-
-    public void addListFriend(ListFriend listFriend){
-        for(Friend friend: listFriend.getListFriend()){
+    public void addListFriend(ListFriend listFriend) {
+        for (Friend friend : listFriend.getListFriend()) {
             addFriend(friend);
         }
     }
@@ -53,7 +65,7 @@ public final class FriendDB {
         ListFriend listFriend = new ListFriend();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         // Define a projection that specifies which columns from the database
-// you will actually use after this query.
+        // you will actually use after this query.
         try {
             Cursor cursor = db.rawQuery("select * from " + FeedEntry.TABLE_NAME, null);
             while (cursor.moveToNext()) {
@@ -66,13 +78,13 @@ public final class FriendDB {
                 listFriend.getListFriend().add(friend);
             }
             cursor.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ListFriend();
         }
         return listFriend;
     }
 
-    public void dropDB(){
+    public void dropDB() {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         db.execSQL(SQL_DELETE_ENTRIES);
         db.execSQL(SQL_CREATE_ENTRIES);
@@ -87,19 +99,6 @@ public final class FriendDB {
         static final String COLUMN_NAME_ID_ROOM = "idRoom";
         static final String COLUMN_NAME_AVATA = "avata";
     }
-
-    private static final String TEXT_TYPE = " TEXT";
-    private static final String COMMA_SEP = ",";
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
-                    FeedEntry.COLUMN_NAME_ID + " TEXT PRIMARY KEY," +
-                    FeedEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                    FeedEntry.COLUMN_NAME_EMAIL + TEXT_TYPE + COMMA_SEP +
-                    FeedEntry.COLUMN_NAME_ID_ROOM + TEXT_TYPE + COMMA_SEP +
-                    FeedEntry.COLUMN_NAME_AVATA + TEXT_TYPE + " )";
-
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
 
 
     private static class FriendDBHelper extends SQLiteOpenHelper {

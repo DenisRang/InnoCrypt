@@ -12,11 +12,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.sansara.develop.innocrypt.MainActivity;
-import com.sansara.develop.innocrypt.R;
-import com.sansara.develop.innocrypt.data.SharedPreferenceHelper;
-import com.sansara.develop.innocrypt.data.StaticConfig;
-import com.sansara.develop.innocrypt.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -27,12 +22,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sansara.develop.innocrypt.MainActivity;
+import com.sansara.develop.innocrypt.R;
+import com.sansara.develop.innocrypt.data.SharedPreferenceHelper;
+import com.sansara.develop.innocrypt.data.StaticConfig;
+import com.sansara.develop.innocrypt.model.User;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -50,12 +51,6 @@ public class LoginActivity extends AppCompatActivity {
     private boolean firstTimeAccess;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -64,6 +59,36 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = (EditText) findViewById(R.id.et_password);
         firstTimeAccess = true;
         initFirebase();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == StaticConfig.REQUEST_CODE_REGISTER && resultCode == RESULT_OK) {
+            authUtils.createUser(data.getStringExtra(StaticConfig.STR_EXTRA_USERNAME), data.getStringExtra(StaticConfig.STR_EXTRA_PASSWORD));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_CANCELED, null);
+        finish();
     }
 
 
@@ -92,14 +117,6 @@ public class LoginActivity extends AppCompatActivity {
         waitingDialog = new LovelyProgressDialog(this).setCancelable(false);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
     public void clickRegisterLayout(View view) {
         getWindow().setExitTransition(null);
         getWindow().setEnterTransition(null);
@@ -113,14 +130,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == StaticConfig.REQUEST_CODE_REGISTER && resultCode == RESULT_OK) {
-            authUtils.createUser(data.getStringExtra(StaticConfig.STR_EXTRA_USERNAME), data.getStringExtra(StaticConfig.STR_EXTRA_PASSWORD));
-        }
-    }
-
     public void clickLogin(View view) {
         String username = editTextUsername.getText().toString();
         String password = editTextPassword.getText().toString();
@@ -131,16 +140,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setResult(RESULT_CANCELED, null);
-        finish();
-    }
-
     private boolean validate(String emailStr, String password) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
-        return (password.length() > 0 || password.equals(";")) && matcher.find();
+        return (password.length() > 0 || password.equals(";")) && matcher.find();   //TODO: fix backdoor with password
     }
 
     public void clickResetPassword(View view) {
@@ -152,9 +154,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Dinh nghia cac ham tien ich cho quas trinhf dang nhap, dang ky,...
-     */
+
     class AuthUtils {
         /**
          * Action register
@@ -300,37 +300,33 @@ public class LoginActivity extends AppCompatActivity {
                                     .show();
                         }
                     })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    new LovelyInfoDialog(LoginActivity.this) {
+                    .addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public LovelyInfoDialog setConfirmButtonText(String text) {
-                            findView(com.yarolegovich.lovelydialog.R.id.ld_btn_confirm).setOnClickListener(new View.OnClickListener() {
+                        public void onFailure(@NonNull Exception e) {
+                            new LovelyInfoDialog(LoginActivity.this) {
                                 @Override
-                                public void onClick(View view) {
-                                    dismiss();
+                                public LovelyInfoDialog setConfirmButtonText(String text) {
+                                    findView(com.yarolegovich.lovelydialog.R.id.ld_btn_confirm).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dismiss();
+                                        }
+                                    });
+                                    return super.setConfirmButtonText(text);
                                 }
-                            });
-                            return super.setConfirmButtonText(text);
+                            }
+                                    .setTopColorRes(R.color.colorAccent)
+                                    .setIcon(R.drawable.ic_pass_reset)
+                                    .setTitle("False")
+                                    .setMessage("False to sent email to " + email)
+                                    .setConfirmButtonText("Ok")
+                                    .show();
                         }
-                    }
-                            .setTopColorRes(R.color.colorAccent)
-                            .setIcon(R.drawable.ic_pass_reset)
-                            .setTitle("False")
-                            .setMessage("False to sent email to " + email)
-                            .setConfirmButtonText("Ok")
-                            .show();
-                }
-            });
+                    });
         }
 
-        /**
-         * Luu thong tin user info cho nguoi dung dang nhap
-         */
         void saveUserInfo() {
-            FirebaseDatabase.getInstance().getReference().child("user/" + StaticConfig.UID)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("user/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     waitingDialog.dismiss();
@@ -349,9 +345,6 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
-        /**
-         * Khoi tao thong tin mac dinh cho tai khoan moi
-         */
         void initNewUserInfo() {
             User newUser = new User();
             newUser.email = user.getEmail();

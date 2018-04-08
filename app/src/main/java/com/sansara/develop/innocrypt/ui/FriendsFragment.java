@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -639,8 +640,10 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if (listFriend.getListFriend().get(position).status.isOnline) {
             ((ItemFriendViewHolder) holder).avata.setBorderWidth(10);
+            ((ItemFriendViewHolder) holder).avata.setBorderColor(Color.parseColor("#FF16FA96"));
         } else {
             ((ItemFriendViewHolder) holder).avata.setBorderWidth(0);
+            ((ItemFriendViewHolder) holder).avata.setBorderColor(Color.parseColor("#FFFFFF"));
         }
     }
 

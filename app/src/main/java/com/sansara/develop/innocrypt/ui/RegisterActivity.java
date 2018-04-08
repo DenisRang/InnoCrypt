@@ -50,6 +50,12 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        animateRevealClose();
+    }
+
     private void ShowEnterAnimation() {
         Transition transition = TransitionInflater.from(this).inflateTransition(R.transition.fabtransition);
         getWindow().setSharedElementEnterTransition(transition);
@@ -103,7 +109,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
         mAnimator.start();
     }
-
     public void animateRevealClose() {
         Animator mAnimator = ViewAnimationUtils.createCircularReveal(cvAdd,cvAdd.getWidth()/2,0, cvAdd.getHeight(), fab.getWidth() / 2);
         mAnimator.setDuration(500);
@@ -123,10 +128,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         mAnimator.start();
-    }
-    @Override
-    public void onBackPressed() {
-        animateRevealClose();
     }
 
     public void clickRegister(View view) {
