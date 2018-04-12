@@ -12,7 +12,7 @@
         android:paddingTop="30dp">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cv_add"
+            android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="320dp"
             android:layout_gravity="center_horizontal"
@@ -51,7 +51,7 @@
                         android:theme="@style/TextLabel">
 
                         <EditText
-                            android:id="@+id/et_username"
+                            android:id="@+id/edit_username"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/selector_bg_edit_2"
@@ -79,7 +79,7 @@
                         android:theme="@style/TextLabel">
 
                         <EditText
-                            android:id="@+id/et_password"
+                            android:id="@+id/edit_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/selector_bg_edit_2"
@@ -107,7 +107,7 @@
                         android:theme="@style/TextLabel">
 
                         <EditText
-                            android:id="@+id/et_repeatpassword"
+                            android:id="@+id/edit_repeat_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/selector_bg_edit_2"
@@ -121,16 +121,16 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/bt_go"
+                    android:id="@+id/button_go"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/bt_shape_2"
+                    android:onClick="clickRegister"
                     android:stateListAnimator="@drawable/state_list_animator_z"
                     android:text="@string/go"
-                    android:textColor="#2fa881"
-                    android:onClick="clickRegister"/>
+                    android:textColor="#2fa881" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

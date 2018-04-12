@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/profile"
+        android:id="@+id/relative_layout_profile"
         android:background="@color/grey_100"
         app:layout_aspectRatio="150%"
         app:layout_widthPercent="100%">
@@ -16,7 +16,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/img_avatar"
+                android:id="@+id/image_avatar"
                 android:layout_width="104dp"
                 android:layout_height="104dp"
                 android:layout_gravity="center"
@@ -24,7 +24,7 @@
                 android:src="@drawable/default_avata" />
 
             <TextView
-                android:id="@+id/tv_username"
+                android:id="@+id/text_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -35,10 +35,10 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/info_recycler_view"
+        android:id="@+id/recycler_configs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile"
+        android:layout_below="@+id/relative_layout_profile"
         android:scrollbars="vertical" />
 
 </android.support.percent.PercentRelativeLayout>

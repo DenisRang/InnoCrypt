@@ -20,26 +20,26 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtName"
+            android:id="@+id/text_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="bottom"
             android:text="Nguyen Binh"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/txtEmail"
+            android:id="@+id/text_email"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="top"
-            android:text="Nguyen Binh"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:text="Ivanov Ivan"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
     <CheckBox
-        android:id="@+id/checkAddPeople"
+        android:id="@+id/check_box_add_people"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_weight="1" />

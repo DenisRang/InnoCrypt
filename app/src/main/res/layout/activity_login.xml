@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cv"
+        android:id="@+id/card"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true"
@@ -54,7 +54,7 @@
                     android:textColorHint="#c5c5c5">
 
                     <EditText
-                        android:id="@+id/et_username"
+                        android:id="@+id/edit_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/selector_bg_edit"
@@ -80,7 +80,7 @@
                     android:textColorHint="#c5c5c5">
 
                     <EditText
-                        android:id="@+id/et_password"
+                        android:id="@+id/edit_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/selector_bg_edit"
@@ -100,14 +100,14 @@
                 android:gravity="center">
 
                 <Button
-                    android:id="@+id/bt_go"
+                    android:id="@+id/button_go"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:background="@drawable/bt_shape"
+                    android:onClick="clickLogin"
                     android:stateListAnimator="@drawable/state_list_animator_z"
                     android:text="@string/go"
-                    android:textColor="#d3d3d3"
-                    android:onClick="clickLogin"/>
+                    android:textColor="#d3d3d3" />
             </RelativeLayout>
 
             <TextView
@@ -115,10 +115,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
+                android:onClick="clickResetPassword"
                 android:text="@string/forgot_your_password"
                 android:textColor="#9a9a9a"
-                android:textSize="12sp"
-                android:onClick="clickResetPassword"/>
+                android:textSize="12sp" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -126,8 +126,8 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/cv"
-        android:layout_alignTop="@id/cv"
+        android:layout_alignEnd="@id/card"
+        android:layout_alignTop="@id/card"
         android:layout_marginEnd="-20dp"
         android:layout_marginTop="25dp"
         android:onClick="clickRegisterLayout"

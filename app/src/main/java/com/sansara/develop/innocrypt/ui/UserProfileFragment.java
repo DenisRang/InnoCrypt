@@ -114,7 +114,7 @@ public class UserProfileFragment extends Fragment {
         userDB.addListenerForSingleValueEvent(userListener);
         mAuth = FirebaseAuth.getInstance();
 
-        View view = inflater.inflate(R.layout.fragment_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
         context = view.getContext();
         avatar = (ImageView) view.findViewById(R.id.img_avatar);
         avatar.setOnClickListener(onAvatarClick);
@@ -277,7 +277,7 @@ public class UserProfileFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_info_item_layout, parent, false);
+                    .inflate(R.layout.item_user_profile_config, parent, false);
             return new ViewHolder(itemView);
         }
 
