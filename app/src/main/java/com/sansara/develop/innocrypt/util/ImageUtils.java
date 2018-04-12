@@ -18,14 +18,7 @@ public class ImageUtils {
     public static final int AVATAR_WIDTH = 128;
     public static final int AVATAR_HEIGHT = 128;
 
-    /**
-     * Bo tròn ảnh avatar
-     * @param context
-     * @param src ảnh dạng bitmap
-     * @return RoundedBitmapDrawable là đầu vào cho hàm setImageDrawable()
-     */
     public static RoundedBitmapDrawable roundedImage(Context context, Bitmap src){
-        /*Bo tròn avatar*/
         Resources res = context.getResources();
         RoundedBitmapDrawable dr =
                 RoundedBitmapDrawableFactory.create(res, src);
@@ -34,12 +27,6 @@ public class ImageUtils {
         return dr;
     }
 
-    /**
-     * Đối với ảnh hình chữ nhật thì cần cắt ảnh theo hình vuông và lấy phần tâm
-     * ảnh để khi đặt làm avatar sẽ không bị méo
-     * @param srcBmp
-     * @return
-     */
     public static Bitmap cropToSquare(Bitmap srcBmp){
         Bitmap dstBmp = null;
         if (srcBmp.getWidth() >= srcBmp.getHeight()){
@@ -65,11 +52,6 @@ public class ImageUtils {
         return dstBmp;
     }
 
-    /**
-     * Convert ảnh dạng bitmap ra String base64
-     * @param imgBitmap
-     * @return
-     */
     public static String encodeBase64(Bitmap imgBitmap){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         imgBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
@@ -77,13 +59,6 @@ public class ImageUtils {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
-    /**
-     * Làm giảm số điểm ảnh xuống để tránh lỗi Firebase Database OutOfMemory
-     * @param is anh dau vao
-     * @param reqWidth kích thước chiều rộng sau khi giảm
-     * @param reqHeight kích thước chiều cao sau khi giảm
-     * @return
-     */
     public static Bitmap makeImageLite(InputStream is, int width, int height,
                                        int reqWidth, int reqHeight) {
         int inSampleSize = 1;

@@ -171,6 +171,63 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getListFriendUId();
     }
 
+    private void getListFriendUId() {
+        FirebaseDatabase.getInstance().getReference().child("friend/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    HashMap mapRecord = (HashMap) dataSnapshot.getValue();
+                    Iterator listKey = mapRecord.keySet().iterator();
+                    while (listKey.hasNext()) {
+                        String key = listKey.next().toString();
+                        listFriendID.add(mapRecord.get(key).toString());
+                    }
+                    getAllFriendInfo(0);
+                } else {
+                    dialogFindAllFriend.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void getAllFriendInfo(final int index) {
+        if (index == listFriendID.size()) {
+            //save list friend
+            adapter.notifyDataSetChanged();
+            dialogFindAllFriend.dismiss();
+            mSwipeRefreshLayout.setRefreshing(false);
+            detectFriendOnline.start();
+        } else {
+            final String id = listFriendID.get(index);
+            FirebaseDatabase.getInstance().getReference().child("user/" + id).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() != null) {
+                        Friend user = new Friend();
+                        HashMap mapUserInfo = (HashMap) dataSnapshot.getValue();
+                        user.name = (String) mapUserInfo.get("name");
+                        user.email = (String) mapUserInfo.get("email");
+                        user.avata = (String) mapUserInfo.get("avata");
+                        user.id = id;
+                        user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
+                        dataListFriend.getListFriend().add(user);
+                        FriendDB.getInstance(getContext()).addFriend(user);
+                    }
+                    getAllFriendInfo(index + 1);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
     public class FragFriendClickFloatButton implements View.OnClickListener {
         Context context;
         LovelyProgressDialog dialogWait;
@@ -204,20 +261,12 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
                         @Override
                         public void onTextInputConfirmed(String text) {
-                            //Tim id user id
                             findIDEmail(text);
-                            //Check xem da ton tai ban ghi friend chua
-                            //Ghi them 1 ban ghi
                         }
                     })
                     .show();
         }
 
-        /**
-         * TIm id cua email tren server
-         *
-         * @param email
-         */
         private void findIDEmail(String email) {
             dialogWait.setCancelable(false)
                     .setIcon(R.drawable.ic_add_friend)
@@ -265,9 +314,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         }
 
-        /**
-         * Lay danh sach friend cua một UID
-         */
         private void checkBeforAddFriend(final String idFriend, Friend userInfo) {
             dialogWait.setCancelable(false)
                     .setIcon(R.drawable.ic_add_friend)
@@ -275,7 +321,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setTopColorRes(R.color.colorPrimary)
                     .show();
 
-            //Check xem da ton tai id trong danh sach id chua
             if (listFriendID.contains(idFriend)) {
                 dialogWait.dismiss();
                 new LovelyInfoDialog(context)
@@ -357,69 +402,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
 
     }
-
-    /**
-     * Lay danh sach ban be tren server
-     */
-    private void getListFriendUId() {
-        FirebaseDatabase.getInstance().getReference().child("friend/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    HashMap mapRecord = (HashMap) dataSnapshot.getValue();
-                    Iterator listKey = mapRecord.keySet().iterator();
-                    while (listKey.hasNext()) {
-                        String key = listKey.next().toString();
-                        listFriendID.add(mapRecord.get(key).toString());
-                    }
-                    getAllFriendInfo(0);
-                } else {
-                    dialogFindAllFriend.dismiss();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    /**
-     * Truy cap bang user lay thong tin id nguoi dung
-     */
-    private void getAllFriendInfo(final int index) {
-        if (index == listFriendID.size()) {
-            //save list friend
-            adapter.notifyDataSetChanged();
-            dialogFindAllFriend.dismiss();
-            mSwipeRefreshLayout.setRefreshing(false);
-            detectFriendOnline.start();
-        } else {
-            final String id = listFriendID.get(index);
-            FirebaseDatabase.getInstance().getReference().child("user/" + id).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null) {
-                        Friend user = new Friend();
-                        HashMap mapUserInfo = (HashMap) dataSnapshot.getValue();
-                        user.name = (String) mapUserInfo.get("name");
-                        user.email = (String) mapUserInfo.get("email");
-                        user.avata = (String) mapUserInfo.get("avata");
-                        user.id = id;
-                        user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
-                        dataListFriend.getListFriend().add(user);
-                        FriendDB.getInstance(getContext()).addFriend(user);
-                    }
-                    getAllFriendInfo(index + 1);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
 }
 
 class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -485,7 +467,6 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
 
-        //nhấn giữ để xóa bạn
         ((View) ((ItemFriendViewHolder) holder).txtName.getParent().getParent().getParent())
                 .setOnLongClickListener(new View.OnLongClickListener() {
                     @Override

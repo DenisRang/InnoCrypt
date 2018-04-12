@@ -53,19 +53,15 @@ import java.util.List;
 
 
 public class UserProfileFragment extends Fragment {
-    TextView tvUserName;
-    ImageView avatar;
-
-    private List<Configuration> listConfig = new ArrayList<>();
-    private RecyclerView recyclerView;
-    private UserInfoAdapter infoAdapter;
-
     private static final String USERNAME_LABEL = "Username";
     private static final String EMAIL_LABEL = "Email";
     private static final String SIGNOUT_LABEL = "Sign out";
     private static final String RESETPASS_LABEL = "Change Password";
-
     private static final int PICK_IMAGE = 1994;
+
+    private List<Configuration> listConfig = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private UserInfoAdapter infoAdapter;
     private LovelyProgressDialog waitingDialog;
 
     private DatabaseReference userDB;
@@ -73,19 +69,11 @@ public class UserProfileFragment extends Fragment {
     private User myAccount;
     private Context context;
 
-    public UserProfileFragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+    private TextView tvUserName;
+    private ImageView avatar;
     private ValueEventListener userListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            //Lấy thông tin của user về và cập nhật lên giao diện
             listConfig.clear();
             myAccount = dataSnapshot.getValue(User.class);
 
@@ -105,10 +93,19 @@ public class UserProfileFragment extends Fragment {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            //Có lỗi xảy ra, không lấy đc dữ liệu
             Log.e(UserProfileFragment.class.getName(), "loadPost:onCancelled", databaseError.toException());
         }
     };
+
+
+    public UserProfileFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +114,6 @@ public class UserProfileFragment extends Fragment {
         userDB.addListenerForSingleValueEvent(userListener);
         mAuth = FirebaseAuth.getInstance();
 
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_info, container, false);
         context = view.getContext();
         avatar = (ImageView) view.findViewById(R.id.img_avatar);
@@ -141,9 +137,6 @@ public class UserProfileFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Khi click vào avatar thì bắn intent mở trình xem ảnh mặc định để chọn ảnh
-     */
     private View.OnClickListener onAvatarClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -169,6 +162,16 @@ public class UserProfileFragment extends Fragment {
                     }).show();
         }
     };
+
+    @Override
+    public void onDestroyView (){
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy (){
+        super.onDestroy();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -233,10 +236,6 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    /**
-     * Xóa list cũ và cập nhật lại list data mới
-     * @param myAccount
-     */
     public void setupArrayListInfo(User myAccount){
         listConfig.clear();
         Configuration userNameConfig = new Configuration(USERNAME_LABEL, myAccount.name, R.mipmap.ic_account_box);
@@ -255,7 +254,6 @@ public class UserProfileFragment extends Fragment {
     private void setImageAvatar(Context context, String imgBase64){
         try {
             Resources res = getResources();
-            //Nếu chưa có avatar thì để hình mặc định
             Bitmap src;
             if (imgBase64.equals("default")) {
                 src = BitmapFactory.decodeResource(res, R.drawable.default_avata);
@@ -267,16 +265,6 @@ public class UserProfileFragment extends Fragment {
             avatar.setImageDrawable(ImageUtils.roundedImage(context, src));
         }catch (Exception e){
         }
-    }
-
-    @Override
-    public void onDestroyView (){
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy (){
-        super.onDestroy();
     }
 
     public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHolder>{
@@ -315,7 +303,6 @@ public class UserProfileFragment extends Fragment {
                                 .inflate(R.layout.dialog_edit_username,  (ViewGroup) getView(), false);
                         final EditText input = (EditText)vewInflater.findViewById(R.id.edit_username);
                         input.setText(myAccount.name);
-                        /*Hiển thị dialog với dEitText cho phép người dùng nhập username mới*/
                         new AlertDialog.Builder(context)
                                 .setTitle("Edit username")
                                 .setView(vewInflater)
@@ -359,9 +346,11 @@ public class UserProfileFragment extends Fragment {
             });
         }
 
-        /**
-         * Cập nhật username mới vào SharedPreference và thay đổi trên giao diện
-         */
+        @Override
+        public int getItemCount() {
+            return profileConfig.size();
+        }
+
         private void changeUserName(String newName){
             userDB.child("name").setValue(newName);
 
@@ -374,7 +363,7 @@ public class UserProfileFragment extends Fragment {
             setupArrayListInfo(myAccount);
         }
 
-        void resetPassword(final String email) {
+        private void resetPassword(final String email) {
             mAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -422,11 +411,6 @@ public class UserProfileFragment extends Fragment {
                                     .show();
                         }
                     });
-        }
-
-        @Override
-        public int getItemCount() {
-            return profileConfig.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
