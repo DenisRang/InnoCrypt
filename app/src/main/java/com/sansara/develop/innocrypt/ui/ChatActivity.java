@@ -41,6 +41,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public static final int VIEW_TYPE_FRIEND_MESSAGE = 1;
     private RecyclerViewAdapterMsg mRecyclerViewAdapterMsg;
     private String mRoomId;
+
     private ArrayList<CharSequence> mFriendId;
     private Consersation mConsersation;
     private ImageButton mButtonSend;
