@@ -69,6 +69,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             bitmapAvataUser = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         } else {
             bitmapAvataUser = null;
+
         }
 
         editWriteMessage = (EditText) findViewById(R.id.editWriteMessage);
