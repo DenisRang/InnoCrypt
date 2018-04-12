@@ -5,26 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:layout_marginBottom="5dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginStart="15dp"
     android:layout_marginEnd="15dp"
+    android:layout_marginStart="15dp"
+    android:layout_marginTop="5dp"
     card_view:cardBackgroundColor="@color/colorCardView"
     card_view:cardCornerRadius="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/icon_avata"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            app:civ_border_color="@color/colorPrimary"/>
+            app:civ_border_color="@color/colorPrimary" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -42,7 +41,7 @@
                 android:paddingTop="5dp">
 
                 <TextView
-                    android:id="@+id/txtName"
+                    android:id="@+id/text_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
@@ -50,7 +49,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
-                    android:id="@+id/txtTime"
+                    android:id="@+id/text_time"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.5"
@@ -60,12 +59,12 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/txtMessage"
+                android:id="@+id/text_message"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:ellipsize="end"
+                android:gravity="center_vertical"
                 android:lines="1"
                 android:paddingBottom="10dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
