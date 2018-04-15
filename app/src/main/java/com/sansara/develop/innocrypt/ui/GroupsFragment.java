@@ -67,9 +67,6 @@ public class GroupsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FloatingActionButton fab;
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new onClickListenerFabAdd());
     }
 
     @Override
@@ -103,6 +100,16 @@ public class GroupsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             getListGroup();
         }
         return layout;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FloatingActionButton fab;
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new onClickListenerFabAdd());
     }
 
     private void getListGroup(){

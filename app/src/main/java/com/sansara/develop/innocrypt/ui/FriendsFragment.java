@@ -67,6 +67,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private LovelyProgressDialog dialogFindAllFriend;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private CountDownTimer detectFriendOnline;
+    private LovelyProgressDialog dialogWait;
     public static int ACTION_START_CHAT = 1;
 
     public static final String ACTION_DELETE_FRIEND = "com.sansara.develop.innocrypt.DELETE_FRIEND";
@@ -80,10 +81,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FloatingActionButton fab;
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new onClickListenerFabAdd());
     }
 
     @Override
@@ -130,6 +127,8 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             getListFriendUId();
         }
 
+        dialogWait = new LovelyProgressDialog(getContext());
+
         deleteFriendReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -149,6 +148,15 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getContext().registerReceiver(deleteFriendReceiver, intentFilter);
 
         return layout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FloatingActionButton fab;
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new onClickListenerFabAdd());
     }
 
     @Override
@@ -234,13 +242,11 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     public class onClickListenerFabAdd implements View.OnClickListener {
-        LovelyProgressDialog dialogWait;
 
         public onClickListenerFabAdd() {
         }
 
         public onClickListenerFabAdd getInstance() {
-            dialogWait = new LovelyProgressDialog(getContext());
             return this;
         }
 

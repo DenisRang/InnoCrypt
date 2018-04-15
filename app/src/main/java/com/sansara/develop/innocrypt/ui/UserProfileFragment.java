@@ -107,9 +107,6 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FloatingActionButton fab;
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
     }
 
     @Override
@@ -140,6 +137,14 @@ public class UserProfileFragment extends Fragment {
 
         waitingDialog = new LovelyProgressDialog(context);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FloatingActionButton fab;
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
     }
 
     private View.OnClickListener onAvatarClick = new View.OnClickListener() {
