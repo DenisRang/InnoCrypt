@@ -5,8 +5,6 @@
     android:background="@color/colorIndivateTab"
     android:orientation="vertical">
 
-
-
     <ImageButton
         android:id="@+id/button_send"
         android:layout_width="45dp"
