@@ -7,7 +7,7 @@
     android:layout_marginTop="5dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/icon"
+        android:id="@+id/icon_avatar_user"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentEnd="true"
@@ -16,14 +16,14 @@
         android:src="@drawable/default_avata" />
 
     <TextView
-        android:id="@+id/text_msg"
+        android:id="@+id/text_msg_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:layout_toStartOf="@id/icon"
+        android:layout_toStartOf="@id/icon_avatar_user"
         android:background="@drawable/rounded_corner1"
         android:padding="10dp"
         android:text="a"

@@ -46,7 +46,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private Consersation mConsersation;
     private EditText mEditWriteMessage;
     private ImageButton mButtonSend;
-    public static HashMap<String, Bitmap> sBitmapAvataFriend;
+    public static HashMap<String, Bitmap> bitmapAvataFriend;
     public Bitmap mBitmapAvataUser;
 
 
@@ -77,7 +77,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             mRecyclerViewChat = (RecyclerView) findViewById(R.id.recycler_chat);
             mRecyclerViewChat.setLayoutManager(linearLayoutManager);
-            mRecyclerViewAdapterMsg = new RecyclerViewAdapterMsg(this, mConsersation, sBitmapAvataFriend, mBitmapAvataUser);
+            mRecyclerViewAdapterMsg = new RecyclerViewAdapterMsg(this, mConsersation, bitmapAvataFriend, mBitmapAvataUser);
             FirebaseDatabase.getInstance().getReference().child("message/" + mRoomId).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -200,9 +200,9 @@ class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 String avataStr = (String) dataSnapshot.getValue();
                                 if(!avataStr.equals(StaticConfig.STR_DEFAULT_BASE64)) {
                                     byte[] decodedString = Base64.decode(avataStr, Base64.DEFAULT);
-                                    ChatActivity.sBitmapAvataFriend.put(id, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+                                    ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
                                 }else{
-                                    ChatActivity.sBitmapAvataFriend.put(id, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_avata));
+                                    ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_avata));
                                 }
                                 notifyDataSetChanged();
                             }
@@ -240,8 +240,8 @@ class ItemMessageUserHolder extends RecyclerView.ViewHolder {
 
     public ItemMessageUserHolder(View itemView) {
         super(itemView);
-        mTextMessage = (TextView) itemView.findViewById(R.id.text_message);
-        mIconAvata = (CircleImageView) itemView.findViewById(R.id.icon_avata);
+        mTextMessage = (TextView) itemView.findViewById(R.id.text_msg_user);
+        mIconAvata = (CircleImageView) itemView.findViewById(R.id.icon_avatar_user);
     }
 }
 
@@ -251,7 +251,7 @@ class ItemMessageFriendHolder extends RecyclerView.ViewHolder {
 
     public ItemMessageFriendHolder(View itemView) {
         super(itemView);
-        mTextMessage = (TextView) itemView.findViewById(R.id.text_message);
-        mIconAvata = (CircleImageView) itemView.findViewById(R.id.icon_avata);
+        mTextMessage = (TextView) itemView.findViewById(R.id.text_msg_friend);
+        mIconAvata = (CircleImageView) itemView.findViewById(R.id.icon_avatar_friend);
     }
 }

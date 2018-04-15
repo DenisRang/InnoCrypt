@@ -62,14 +62,14 @@ public class AddGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_group);
 
         Intent intentData = getIntent();
-        txtActionName = (TextView) findViewById(R.id.txtActionName);
+        txtActionName = (TextView) findViewById(R.id.text_button_create_group);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         listFriend = FriendDB.getInstance(this).getListFriend();
         listIDChoose = new HashSet<>();
         listIDRemove = new HashSet<>();
         listIDChoose.add(StaticConfig.UID);
-        btnAddGroup = (LinearLayout) findViewById(R.id.btnAddGroup);
-        editTextGroupName = (EditText) findViewById(R.id.editGroupName);
+        btnAddGroup = (LinearLayout) findViewById(R.id.linear_layout_add_group);
+        editTextGroupName = (EditText) findViewById(R.id.edit_group_name);
         txtGroupIcon = (TextView) findViewById(R.id.icon_group);
         dialogWait = new LovelyProgressDialog(this).setCancelable(false);
         editTextGroupName.addTextChangedListener(new TextWatcher() {
@@ -123,7 +123,7 @@ public class AddGroupActivity extends AppCompatActivity {
             isEditGroup = false;
         }
 
-        recyclerListFriend = (RecyclerView) findViewById(R.id.recycleListFriend);
+        recyclerListFriend = (RecyclerView) findViewById(R.id.recycler_friends);
         recyclerListFriend.setLayoutManager(linearLayoutManager);
         adapter = new ListPeopleAdapter(this, listFriend, btnAddGroup, listIDChoose, listIDRemove, isEditGroup, groupEdit);
         recyclerListFriend.setAdapter(adapter);
@@ -365,10 +365,10 @@ class ItemFriendHolder extends RecyclerView.ViewHolder {
 
     public ItemFriendHolder(View itemView) {
         super(itemView);
-        txtName = (TextView) itemView.findViewById(R.id.txtName);
-        txtEmail = (TextView) itemView.findViewById(R.id.txtEmail);
-        avata = (CircleImageView) itemView.findViewById(R.id.icon_avata);
-        checkBox = (CheckBox) itemView.findViewById(R.id.checkAddPeople);
+        txtName = (TextView) itemView.findViewById(R.id.text_name);
+        txtEmail = (TextView) itemView.findViewById(R.id.text_email);
+        avata = (CircleImageView) itemView.findViewById(R.id.icon_avatar);
+        checkBox = (CheckBox) itemView.findViewById(R.id.check_box_add_people);
     }
 }
 

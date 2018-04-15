@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageButton
-            android:id="@+id/btnMoreAction"
+            android:id="@+id/button_more_actions"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="5dp"
@@ -25,7 +25,7 @@
             android:scaleType="centerInside"/>
 
         <TextView
-            android:id="@+id/icon_group"
+            android:id="@+id/text_icon_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="R"
@@ -34,11 +34,11 @@
             android:textColor="@android:color/white"
             android:gravity="center"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/btnMoreAction"
+            android:layout_below="@id/button_more_actions"
             />
 
         <TextView
-            android:id="@+id/txtName"
+            android:id="@+id/text_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

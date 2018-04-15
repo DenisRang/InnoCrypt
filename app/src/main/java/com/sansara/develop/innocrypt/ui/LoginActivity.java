@@ -55,8 +55,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        editTextUsername = (EditText) findViewById(R.id.et_username);
-        editTextPassword = (EditText) findViewById(R.id.et_password);
+        editTextUsername = (EditText) findViewById(R.id.edit_username);
+        editTextPassword = (EditText) findViewById(R.id.edit_password);
         firstTimeAccess = true;
         initFirebase();
     }

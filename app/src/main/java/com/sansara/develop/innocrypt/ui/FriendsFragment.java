@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -60,11 +61,12 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private RecyclerView recyclerListFrends;
     private ListFriendsAdapter adapter;
-    public FragFriendClickFloatButton onClickFloatButton;
+    public onClickListenerFabAdd onClickFloatButton;
     private ListFriend dataListFriend = null;
     private ArrayList<String> listFriendID = null;
     private LovelyProgressDialog dialogFindAllFriend;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private FloatingActionButton fab;
     private CountDownTimer detectFriendOnline;
     public static int ACTION_START_CHAT = 1;
 
@@ -73,12 +75,15 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private BroadcastReceiver deleteFriendReceiver;
 
     public FriendsFragment() {
-        onClickFloatButton = new FragFriendClickFloatButton();
+        onClickFloatButton = new onClickListenerFabAdd();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new onClickListenerFabAdd());
     }
 
     @Override
@@ -106,11 +111,11 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 detectFriendOnline.start();
             }
         }
-        View layout = inflater.inflate(R.layout.fragment_people, container, false);
+        View layout = inflater.inflate(R.layout.fragment_friends, container, false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerListFrends = (RecyclerView) layout.findViewById(R.id.recycleListFriend);
+        recyclerListFrends = (RecyclerView) layout.findViewById(R.id.recycler_friends);
         recyclerListFrends.setLayoutManager(linearLayoutManager);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         adapter = new ListFriendsAdapter(getContext(), dataListFriend, this);
         recyclerListFrends.setAdapter(adapter);
@@ -228,16 +233,14 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    public class FragFriendClickFloatButton implements View.OnClickListener {
-        Context context;
+    public class onClickListenerFabAdd implements View.OnClickListener {
         LovelyProgressDialog dialogWait;
 
-        public FragFriendClickFloatButton() {
+        public onClickListenerFabAdd() {
         }
 
-        public FragFriendClickFloatButton getInstance(Context context) {
-            this.context = context;
-            dialogWait = new LovelyProgressDialog(context);
+        public onClickListenerFabAdd getInstance() {
+            dialogWait = new LovelyProgressDialog(getContext());
             return this;
         }
 
@@ -279,7 +282,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     dialogWait.dismiss();
                     if (dataSnapshot.getValue() == null) {
                         //email not found
-                        new LovelyInfoDialog(context)
+                        new LovelyInfoDialog(getContext())
                                 .setTopColorRes(R.color.colorAccent)
                                 .setIcon(R.drawable.ic_add_friend)
                                 .setTitle("Fail")
@@ -288,7 +291,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     } else {
                         String id = ((HashMap) dataSnapshot.getValue()).keySet().iterator().next().toString();
                         if (id.equals(StaticConfig.UID)) {
-                            new LovelyInfoDialog(context)
+                            new LovelyInfoDialog(getContext())
                                     .setTopColorRes(R.color.colorAccent)
                                     .setIcon(R.drawable.ic_add_friend)
                                     .setTitle("Fail")
@@ -323,7 +326,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             if (listFriendID.contains(idFriend)) {
                 dialogWait.dismiss();
-                new LovelyInfoDialog(context)
+                new LovelyInfoDialog(getContext())
                         .setTopColorRes(R.color.colorPrimary)
                         .setIcon(R.drawable.ic_add_friend)
                         .setTitle("Friend")
@@ -359,7 +362,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     dialogWait.dismiss();
-                                    new LovelyInfoDialog(context)
+                                    new LovelyInfoDialog(getContext())
                                             .setTopColorRes(R.color.colorAccent)
                                             .setIcon(R.drawable.ic_add_friend)
                                             .setTitle("False")
@@ -380,7 +383,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     dialogWait.dismiss();
-                                    new LovelyInfoDialog(context)
+                                    new LovelyInfoDialog(getContext())
                                             .setTopColorRes(R.color.colorAccent)
                                             .setIcon(R.drawable.ic_add_friend)
                                             .setTitle("False")
@@ -391,7 +394,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             } else {
                 dialogWait.dismiss();
-                new LovelyInfoDialog(context)
+                new LovelyInfoDialog(getContext())
                         .setTopColorRes(R.color.colorPrimary)
                         .setIcon(R.drawable.ic_add_friend)
                         .setTitle("Success")
@@ -710,10 +713,10 @@ class ItemFriendViewHolder extends RecyclerView.ViewHolder{
 
     ItemFriendViewHolder(Context context, View itemView) {
         super(itemView);
-        avata = (CircleImageView) itemView.findViewById(R.id.icon_avata);
-        txtName = (TextView) itemView.findViewById(R.id.txtName);
-        txtTime = (TextView) itemView.findViewById(R.id.txtTime);
-        txtMessage = (TextView) itemView.findViewById(R.id.txtMessage);
+        avata = (CircleImageView) itemView.findViewById(R.id.icon_avatar);
+        txtName = (TextView) itemView.findViewById(R.id.text_name);
+        txtTime = (TextView) itemView.findViewById(R.id.text_time);
+        txtMessage = (TextView) itemView.findViewById(R.id.text_message);
         this.context = context;
     }
 }

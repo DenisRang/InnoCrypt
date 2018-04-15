@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -46,10 +47,11 @@ import java.util.Iterator;
 
 public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private RecyclerView recyclerListGroups;
-    public FragGroupClickFloatButton onClickFloatButton;
+    public onClickListenerFabAdd onClickFloatButton;
     private ArrayList<Group> listGroup;
     private ListGroupsAdapter adapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private FloatingActionButton fab;
     public static final int CONTEXT_MENU_DELETE = 1;
     public static final int CONTEXT_MENU_EDIT = 2;
     public static final int CONTEXT_MENU_LEAVE = 3;
@@ -65,6 +67,9 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new onClickListenerFabAdd());
     }
 
     @Override
@@ -73,14 +78,14 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         View layout = inflater.inflate(R.layout.fragment_group, container, false);
 
         listGroup = GroupDB.getInstance(getContext()).getListGroups();
-        recyclerListGroups = (RecyclerView) layout.findViewById(R.id.recycleListGroup);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipeRefreshLayout);
+        recyclerListGroups = (RecyclerView) layout.findViewById(R.id.recycler_groups);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerListGroups.setLayoutManager(layoutManager);
         adapter = new ListGroupsAdapter(getContext(), listGroup);
         recyclerListGroups.setAdapter(adapter);
-        onClickFloatButton = new FragGroupClickFloatButton();
+        onClickFloatButton = new onClickListenerFabAdd();
         progressDialog = new LovelyProgressDialog(getContext())
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_dialog_delete_group)
@@ -94,7 +99,6 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .setTopColorRes(R.color.colorAccent);
 
         if(listGroup.size() == 0){
-            //Ket noi server hien thi group
             mSwipeRefreshLayout.setRefreshing(true);
             getListGroup();
         }
@@ -348,11 +352,9 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     }
 
-    public class FragGroupClickFloatButton implements View.OnClickListener{
+    public class onClickListenerFabAdd implements View.OnClickListener{
 
-        Context context;
-        public FragGroupClickFloatButton getInstance(Context context){
-            this.context = context;
+        public onClickListenerFabAdd getInstance(){
             return this;
         }
 
@@ -435,9 +437,9 @@ class ItemGroupViewHolder extends RecyclerView.ViewHolder implements View.OnCrea
     public ItemGroupViewHolder(View itemView) {
         super(itemView);
         itemView.setOnCreateContextMenuListener(this);
-        iconGroup = (TextView) itemView.findViewById(R.id.icon_group);
-        txtGroupName = (TextView) itemView.findViewById(R.id.txtName);
-        btnMore = (ImageButton) itemView.findViewById(R.id.btnMoreAction);
+        iconGroup = (TextView) itemView.findViewById(R.id.text_icon_group);
+        txtGroupName = (TextView) itemView.findViewById(R.id.text_name);
+        btnMore = (ImageButton) itemView.findViewById(R.id.button_more_actions);
     }
 
     @Override

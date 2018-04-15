@@ -36,10 +36,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        cvAdd = (CardView) findViewById(R.id.cv_add);
-        editTextUsername = (EditText) findViewById(R.id.et_username);
-        editTextPassword = (EditText) findViewById(R.id.et_password);
-        editTextRepeatPassword = (EditText) findViewById(R.id.et_repeatpassword);
+        cvAdd = (CardView) findViewById(R.id.card);
+        editTextUsername = (EditText) findViewById(R.id.edit_username);
+        editTextPassword = (EditText) findViewById(R.id.edit_password);
+        editTextRepeatPassword = (EditText) findViewById(R.id.edit_repeat_password);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ShowEnterAnimation();
         }
