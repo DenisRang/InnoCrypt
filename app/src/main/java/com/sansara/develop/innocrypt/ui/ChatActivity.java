@@ -44,8 +44,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     private ArrayList<CharSequence> mFriendId;
     private Consersation mConsersation;
-    private ImageButton mButtonSend;
     private EditText mEditWriteMessage;
+    private ImageButton mButtonSend;
     public static HashMap<String, Bitmap> sBitmapAvataFriend;
     public Bitmap mBitmapAvataUser;
 
