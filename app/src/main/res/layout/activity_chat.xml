@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
 
+
     <ImageButton
         android:id="@+id/button_send"
         android:layout_width="45dp"
@@ -18,6 +19,7 @@
         android:src="@drawable/ic_send" />
 
     <View
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@id/button_send"

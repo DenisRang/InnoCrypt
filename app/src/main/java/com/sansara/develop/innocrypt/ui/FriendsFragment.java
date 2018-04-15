@@ -66,7 +66,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ArrayList<String> listFriendID = null;
     private LovelyProgressDialog dialogFindAllFriend;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private FloatingActionButton fab;
     private CountDownTimer detectFriendOnline;
     public static int ACTION_START_CHAT = 1;
 
@@ -81,6 +80,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FloatingActionButton fab;
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new onClickListenerFabAdd());

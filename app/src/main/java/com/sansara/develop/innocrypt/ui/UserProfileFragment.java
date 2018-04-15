@@ -64,7 +64,6 @@ public class UserProfileFragment extends Fragment {
     private RecyclerView recyclerView;
     private UserInfoAdapter infoAdapter;
     private LovelyProgressDialog waitingDialog;
-    private FloatingActionButton fab;
 
 
     private DatabaseReference userDB;
@@ -108,6 +107,7 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FloatingActionButton fab;
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
     }
