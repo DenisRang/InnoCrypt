@@ -72,6 +72,11 @@ public class GroupsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FloatingActionButton fab;
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new onClickListenerFabAdd());
+
         View layout = inflater.inflate(R.layout.fragment_groups, container, false);
 
         listGroup = GroupDB.getInstance(getContext()).getListGroups();
@@ -103,13 +108,16 @@ public class GroupsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
 
+
     @Override
-    public void onResume() {
-        super.onResume();
-        FloatingActionButton fab;
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new onClickListenerFabAdd());
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_EDIT_GROUP && resultCode == Activity.RESULT_OK) {
+            listGroup.clear();
+            ListGroupsAdapter.listFriend = null;
+            GroupDB.getInstance(getContext()).dropDB();
+            getListGroup();
+        }
     }
 
     private void getListGroup(){
@@ -137,17 +145,6 @@ public class GroupsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_EDIT_GROUP && resultCode == Activity.RESULT_OK) {
-            listGroup.clear();
-            ListGroupsAdapter.listFriend = null;
-            GroupDB.getInstance(getContext()).dropDB();
-            getListGroup();
-        }
     }
 
     private void getGroupInfo(final int indexGroup){

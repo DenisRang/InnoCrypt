@@ -112,6 +112,10 @@ public class UserProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FloatingActionButton fab;
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
+
         userDB = FirebaseDatabase.getInstance().getReference().child("user").child(StaticConfig.UID);
         userDB.addListenerForSingleValueEvent(userListener);
         mAuth = FirebaseAuth.getInstance();
@@ -139,13 +143,6 @@ public class UserProfileFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        FloatingActionButton fab;
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-    }
 
     private View.OnClickListener onAvatarClick = new View.OnClickListener() {
         @Override
