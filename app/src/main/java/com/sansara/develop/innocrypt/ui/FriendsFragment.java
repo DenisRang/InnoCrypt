@@ -31,6 +31,7 @@ import com.sansara.develop.innocrypt.data.FriendDB;
 import com.sansara.develop.innocrypt.data.StaticConfig;
 import com.sansara.develop.innocrypt.model.Friend;
 import com.sansara.develop.innocrypt.model.ListFriend;
+import com.sansara.develop.innocrypt.model.User;
 import com.sansara.develop.innocrypt.service.ServiceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,6 +43,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.sansara.develop.innocrypt.util.EncryptingUtils;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
@@ -166,7 +168,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     /**
      * Fill {@link #dataListFriend} and {@link #listFriendID} from {@link FriendDB} cache
      */
-    private void getDataFromCashe(){
+    private void getDataFromCashe() {
         if (dataListFriend == null) {
             dataListFriend = FriendDB.getInstance(getContext()).getListFriend();
             if (dataListFriend.getListFriend().size() > 0) {
@@ -258,15 +260,26 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getValue() != null) {
-                        Friend user = new Friend();
+                        final Friend user = new Friend();
                         HashMap mapUserInfo = (HashMap) dataSnapshot.getValue();
                         user.name = (String) mapUserInfo.get("name");
                         user.email = (String) mapUserInfo.get("email");
                         user.avata = (String) mapUserInfo.get("avata");
                         user.id = id;
                         user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
-                        dataListFriend.getListFriend().add(user);
-                        FriendDB.getInstance(getContext()).addFriend(user);
+                        FirebaseDatabase.getInstance().getReference().child("keys/" + user.idRoom).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                user.key  = (String) dataSnapshot.getValue();
+                                dataListFriend.getListFriend().add(user);
+                                FriendDB.getInstance(getContext()).addFriend(user);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+
                     }
                     getFriendsInfo(index + 1);
                 }
@@ -349,6 +362,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             user.avata = (String) userMap.get("avata");
                             user.id = id;
                             user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
+                            user.key = EncryptingUtils.generateKey(StaticConfig.SIZE_OF_ENCRYPTING_KEY);
                             checkBeforAddFriend(id, user);
                         }
                     }
@@ -378,6 +392,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .show();
             } else {
                 addFriend(idFriend, true);
+                addKeyForRoom(userInfo.idRoom, userInfo.key);
                 listFriendID.add(idFriend);
                 dataListFriend.getListFriend().add(userInfo);
                 FriendDB.getInstance(getContext()).addFriend(userInfo);
@@ -447,6 +462,14 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         }
 
+        /**
+         * Add cipher key for encrypting a chat between 2 users
+         * It temporary stores symmetric cipher key in db on server
+         * In future keys will exchanges on bluetooth
+         */
+        private void addKeyForRoom(String idRoom, String key) {
+            FirebaseDatabase.getInstance().getReference().child("keys/" + idRoom).setValue(key);
+        }
 
     }
 }
@@ -486,6 +509,7 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final String name = listFriend.getListFriend().get(position).name;
         final String id = listFriend.getListFriend().get(position).id;
         final String idRoom = listFriend.getListFriend().get(position).idRoom;
+        final String key = listFriend.getListFriend().get(position).key;
         final String avata = listFriend.getListFriend().get(position).avata;
         ((ItemFriendViewHolder) holder).txtName.setText(name);
 
@@ -501,6 +525,7 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         idFriend.add(id);
                         intent.putCharSequenceArrayListExtra(StaticConfig.INTENT_KEY_CHAT_ID, idFriend);
                         intent.putExtra(StaticConfig.INTENT_KEY_CHAT_ROOM_ID, idRoom);
+                        intent.putExtra(StaticConfig.INTENT_KEY_CHAT_ROOM_KEY, key);
                         ChatActivity.bitmapAvataFriend = new HashMap<>();
                         if (!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
                             byte[] decodedString = Base64.decode(avata, Base64.DEFAULT);
@@ -547,15 +572,16 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
 
 
-        if (listFriend.getListFriend().get(position).message.text.length() > 0) {
+        String msgOfFriend = listFriend.getListFriend().get(position).message.text;
+        if (msgOfFriend.length() > 0) {
             ((ItemFriendViewHolder) holder).txtMessage.setVisibility(View.VISIBLE);
             ((ItemFriendViewHolder) holder).txtTime.setVisibility(View.VISIBLE);
-            if (!listFriend.getListFriend().get(position).message.text.startsWith(id)) {
-                ((ItemFriendViewHolder) holder).txtMessage.setText(listFriend.getListFriend().get(position).message.text);
+            if (!msgOfFriend.startsWith(id)) {
+                ((ItemFriendViewHolder) holder).txtMessage.setText(msgOfFriend);
                 ((ItemFriendViewHolder) holder).txtMessage.setTypeface(Typeface.DEFAULT);
                 ((ItemFriendViewHolder) holder).txtName.setTypeface(Typeface.DEFAULT);
             } else {
-                ((ItemFriendViewHolder) holder).txtMessage.setText(listFriend.getListFriend().get(position).message.text.substring((id + "").length()));
+                ((ItemFriendViewHolder) holder).txtMessage.setText(msgOfFriend.substring((id + "").length()));
                 ((ItemFriendViewHolder) holder).txtMessage.setTypeface(Typeface.DEFAULT_BOLD);
                 ((ItemFriendViewHolder) holder).txtName.setTypeface(Typeface.DEFAULT_BOLD);
             }
@@ -575,16 +601,17 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         HashMap mapMessage = (HashMap) dataSnapshot.getValue();
+                        String msg = (key != null) ? EncryptingUtils.decrypt((String) mapMessage.get("text"), key) : (String) mapMessage.get("text");
                         if (mapMark.get(id) != null) {
                             if (!mapMark.get(id)) {
-                                listFriend.getListFriend().get(position).message.text = id + mapMessage.get("text");
+                                listFriend.getListFriend().get(position).message.text = id + msg;
                             } else {
-                                listFriend.getListFriend().get(position).message.text = (String) mapMessage.get("text");
+                                listFriend.getListFriend().get(position).message.text = msg;
                             }
                             notifyDataSetChanged();
                             mapMark.put(id, false);
                         } else {
-                            listFriend.getListFriend().get(position).message.text = (String) mapMessage.get("text");
+                            listFriend.getListFriend().get(position).message.text = msg;
                             notifyDataSetChanged();
                         }
                         listFriend.getListFriend().get(position).message.timestamp = (long) mapMessage.get("timestamp");
@@ -618,6 +645,7 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 mapMark.put(id, true);
             }
         }
+
         if (listFriend.getListFriend().get(position).avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
             ((ItemFriendViewHolder) holder).avata.setImageResource(R.drawable.default_avata);
         } else {

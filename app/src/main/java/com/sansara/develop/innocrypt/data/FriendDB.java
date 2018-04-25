@@ -19,6 +19,7 @@ public final class FriendDB {
                     FeedEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     FeedEntry.COLUMN_NAME_EMAIL + TEXT_TYPE + COMMA_SEP +
                     FeedEntry.COLUMN_NAME_ID_ROOM + TEXT_TYPE + COMMA_SEP +
+                    FeedEntry.COLUMN_NAME_KEY + TEXT_TYPE + COMMA_SEP +
                     FeedEntry.COLUMN_NAME_AVATA + TEXT_TYPE + " )";
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
@@ -50,6 +51,7 @@ public final class FriendDB {
         values.put(FeedEntry.COLUMN_NAME_NAME, friend.name);
         values.put(FeedEntry.COLUMN_NAME_EMAIL, friend.email);
         values.put(FeedEntry.COLUMN_NAME_ID_ROOM, friend.idRoom);
+        values.put(FeedEntry.COLUMN_NAME_KEY, friend.key);
         values.put(FeedEntry.COLUMN_NAME_AVATA, friend.avata);
         // Insert the new row, returning the primary key value of the new row
         return db.insert(FeedEntry.TABLE_NAME, null, values);
@@ -74,7 +76,8 @@ public final class FriendDB {
                 friend.name = cursor.getString(1);
                 friend.email = cursor.getString(2);
                 friend.idRoom = cursor.getString(3);
-                friend.avata = cursor.getString(4);
+                friend.key = cursor.getString(4);
+                friend.avata = cursor.getString(5);
                 listFriend.getListFriend().add(friend);
             }
             cursor.close();
@@ -97,6 +100,7 @@ public final class FriendDB {
         static final String COLUMN_NAME_NAME = "name";
         static final String COLUMN_NAME_EMAIL = "email";
         static final String COLUMN_NAME_ID_ROOM = "idRoom";
+        static final String COLUMN_NAME_KEY = "key";
         static final String COLUMN_NAME_AVATA = "avata";
     }
 
