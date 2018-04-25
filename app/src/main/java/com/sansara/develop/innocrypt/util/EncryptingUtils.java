@@ -1,5 +1,7 @@
 package com.sansara.develop.innocrypt.util;
 
+import com.sansara.develop.innocrypt.data.StaticConfig;
+
 import java.util.Random;
 
 public class EncryptingUtils {
@@ -17,7 +19,7 @@ public class EncryptingUtils {
         char[] plainTextTemp = plainText.toCharArray();
         char[] keyTemp = key.toCharArray();
         for (int i = 0; i < plainText.length(); i++) {
-            plainTextTemp[i] = (char) (plainTextTemp[i] ^ keyTemp[i]);
+            plainTextTemp[i] = (char) (plainTextTemp[i] ^ keyTemp[i % StaticConfig.SIZE_OF_ENCRYPTING_KEY]);
         }
         return new String(plainTextTemp);
     }
@@ -26,7 +28,7 @@ public class EncryptingUtils {
         char[] encryptedTextTemp = encryptedText.toCharArray();
         char[] keyTemp = key.toCharArray();
         for (int i = 0; i < encryptedText.length(); i++) {
-            encryptedTextTemp[i] = (char) (encryptedTextTemp[i] ^ keyTemp[i]);
+            encryptedTextTemp[i] = (char) (encryptedTextTemp[i] ^ keyTemp[i % StaticConfig.SIZE_OF_ENCRYPTING_KEY]);
         }
         return new String(encryptedTextTemp);
     }
