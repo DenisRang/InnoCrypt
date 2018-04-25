@@ -90,7 +90,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         Message newMessage = new Message();
                         newMessage.idSender = (String) mapMessage.get("idSender");
                         newMessage.idReceiver = (String) mapMessage.get("idReceiver");
-                        newMessage.text = (key != null) ? EncryptingUtils.decrypt((String) mapMessage.get("text"), key) : (String) mapMessage.get("text");
+                        newMessage.text = (key != null) ? EncryptingUtils.decryptVernam((String) mapMessage.get("text"), key) : (String) mapMessage.get("text");
                         newMessage.timestamp = (long) mapMessage.get("timestamp");
                         consersation.getListMessageData().add(newMessage);
                         recyclerViewAdapterMsg.notifyDataSetChanged();
@@ -148,7 +148,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             if (content.length() > 0) {
                 editWriteMessage.setText("");
                 Message newMessage = new Message();
-                newMessage.text = (key != null) ? EncryptingUtils.encrypt(content, key) : content;
+                newMessage.text = (key != null) ? EncryptingUtils.encryptVernam(content, key) : content;
                 newMessage.idSender = StaticConfig.UID;
                 newMessage.idReceiver = roomId;
                 newMessage.timestamp = System.currentTimeMillis();
@@ -160,27 +160,27 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
 class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context mContext;
-    private Consersation mConsersation;
-    private HashMap<String, Bitmap> mBitmapAvata;
-    private HashMap<String, DatabaseReference> mBitmapAvataReference;
-    private Bitmap mBitmapAvataUser;
+    private Context context;
+    private Consersation consersation;
+    private HashMap<String, Bitmap> bitmapAvata;
+    private HashMap<String, DatabaseReference> bitmapAvataReference;
+    private Bitmap bitmapAvataUser;
 
     public RecyclerViewAdapterMsg(Context context, Consersation consersation, HashMap<String, Bitmap> bitmapAvata, Bitmap bitmapAvataUser) {
-        this.mContext = context;
-        this.mConsersation = consersation;
-        this.mBitmapAvata = bitmapAvata;
-        this.mBitmapAvataUser = bitmapAvataUser;
-        mBitmapAvataReference = new HashMap<>();
+        this.context = context;
+        this.consersation = consersation;
+        this.bitmapAvata = bitmapAvata;
+        this.bitmapAvataUser = bitmapAvataUser;
+        bitmapAvataReference = new HashMap<>();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ChatActivity.VIEW_TYPE_FRIEND_MESSAGE) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.rc_item_message_friend, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.rc_item_message_friend, parent, false);
             return new ItemMessageFriendHolder(view);
         } else if (viewType == ChatActivity.VIEW_TYPE_USER_MESSAGE) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.rc_item_message_user, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.rc_item_message_user, parent, false);
             return new ItemMessageUserHolder(view);
         }
         return null;
@@ -189,15 +189,15 @@ class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemMessageFriendHolder) {
-            ((ItemMessageFriendHolder) holder).mTextMessage.setText(mConsersation.getListMessageData().get(position).text);
-            Bitmap currentAvata = mBitmapAvata.get(mConsersation.getListMessageData().get(position).idSender);
+            ((ItemMessageFriendHolder) holder).textMessage.setText(consersation.getListMessageData().get(position).text);
+            Bitmap currentAvata = bitmapAvata.get(consersation.getListMessageData().get(position).idSender);
             if (currentAvata != null) {
-                ((ItemMessageFriendHolder) holder).mIconAvata.setImageBitmap(currentAvata);
+                ((ItemMessageFriendHolder) holder).iconAvata.setImageBitmap(currentAvata);
             } else {
-                final String id = mConsersation.getListMessageData().get(position).idSender;
-                if (mBitmapAvataReference.get(id) == null) {
-                    mBitmapAvataReference.put(id, FirebaseDatabase.getInstance().getReference().child("user/" + id + "/avata"));
-                    mBitmapAvataReference.get(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                final String id = consersation.getListMessageData().get(position).idSender;
+                if (bitmapAvataReference.get(id) == null) {
+                    bitmapAvataReference.put(id, FirebaseDatabase.getInstance().getReference().child("user/" + id + "/avata"));
+                    bitmapAvataReference.get(id).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() != null) {
@@ -206,7 +206,7 @@ class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     byte[] decodedString = Base64.decode(avataStr, Base64.DEFAULT);
                                     ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
                                 } else {
-                                    ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_avata));
+                                    ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeResource(context.getResources(), R.drawable.default_avata));
                                 }
                                 notifyDataSetChanged();
                             }
@@ -220,42 +220,42 @@ class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
         } else if (holder instanceof ItemMessageUserHolder) {
-            ((ItemMessageUserHolder) holder).mTextMessage.setText(mConsersation.getListMessageData().get(position).text);
-            if (mBitmapAvataUser != null) {
-                ((ItemMessageUserHolder) holder).mIconAvata.setImageBitmap(mBitmapAvataUser);
+            ((ItemMessageUserHolder) holder).textMessage.setText(consersation.getListMessageData().get(position).text);
+            if (bitmapAvataUser != null) {
+                ((ItemMessageUserHolder) holder).iconAvata.setImageBitmap(bitmapAvataUser);
             }
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return mConsersation.getListMessageData().get(position).idSender.equals(StaticConfig.UID) ? ChatActivity.VIEW_TYPE_USER_MESSAGE : ChatActivity.VIEW_TYPE_FRIEND_MESSAGE;
+        return consersation.getListMessageData().get(position).idSender.equals(StaticConfig.UID) ? ChatActivity.VIEW_TYPE_USER_MESSAGE : ChatActivity.VIEW_TYPE_FRIEND_MESSAGE;
     }
 
     @Override
     public int getItemCount() {
-        return mConsersation.getListMessageData().size();
+        return consersation.getListMessageData().size();
     }
 }
 
 class ItemMessageUserHolder extends RecyclerView.ViewHolder {
-    public TextView mTextMessage;
-    public CircleImageView mIconAvata;
+    public TextView textMessage;
+    public CircleImageView iconAvata;
 
     public ItemMessageUserHolder(View itemView) {
         super(itemView);
-        mTextMessage = (TextView) itemView.findViewById(R.id.text_msg_user);
-        mIconAvata = (CircleImageView) itemView.findViewById(R.id.icon_avatar_user);
+        textMessage = (TextView) itemView.findViewById(R.id.text_msg_user);
+        iconAvata = (CircleImageView) itemView.findViewById(R.id.icon_avatar_user);
     }
 }
 
 class ItemMessageFriendHolder extends RecyclerView.ViewHolder {
-    public TextView mTextMessage;
-    public CircleImageView mIconAvata;
+    public TextView textMessage;
+    public CircleImageView iconAvata;
 
     public ItemMessageFriendHolder(View itemView) {
         super(itemView);
-        mTextMessage = (TextView) itemView.findViewById(R.id.text_msg_friend);
-        mIconAvata = (CircleImageView) itemView.findViewById(R.id.icon_avatar_friend);
+        textMessage = (TextView) itemView.findViewById(R.id.text_msg_friend);
+        iconAvata = (CircleImageView) itemView.findViewById(R.id.icon_avatar_friend);
     }
 }

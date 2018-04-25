@@ -601,7 +601,7 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         HashMap mapMessage = (HashMap) dataSnapshot.getValue();
-                        String msg = (key != null) ? EncryptingUtils.decrypt((String) mapMessage.get("text"), key) : (String) mapMessage.get("text");
+                        String msg = (key != null) ? EncryptingUtils.decryptVernam((String) mapMessage.get("text"), key) : (String) mapMessage.get("text");
                         if (mapMark.get(id) != null) {
                             if (!mapMark.get(id)) {
                                 listFriend.getListFriend().get(position).message.text = id + msg;

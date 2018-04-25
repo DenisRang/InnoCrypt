@@ -13,7 +13,7 @@ public class EncryptingUtils {
         return new String(key);
     }
 
-    public static String encrypt(String plainText, String key) {
+    public static String encryptVernam(String plainText, String key) {
         char[] plainTextTemp = plainText.toCharArray();
         char[] keyTemp = key.toCharArray();
         for (int i = 0; i < plainText.length(); i++) {
@@ -22,7 +22,7 @@ public class EncryptingUtils {
         return new String(plainTextTemp);
     }
 
-    public static String decrypt(String encryptedText, String key) {
+    public static String decryptVernam(String encryptedText, String key) {
         char[] encryptedTextTemp = encryptedText.toCharArray();
         char[] keyTemp = key.toCharArray();
         for (int i = 0; i < encryptedText.length(); i++) {
