@@ -35,7 +35,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
 public class LoginActivity extends AppCompatActivity {
     private static String TAG = "LoginActivity";
     FloatingActionButton fab;
@@ -140,9 +139,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validate(String emailStr, String password) {
+    public boolean validate(String emailStr, String password) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
-        return (password.length() > 0 || password.equals(";")) && matcher.find();   //TODO: fix backdoor with password
+        return (password.length() > 0 || password.equals(";")) && matcher.find();
     }
 
     public void clickResetPassword(View view) {
@@ -155,14 +154,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    class AuthUtils {
+    public class AuthUtils {
         /**
          * Action register
          *
          * @param email
          * @param password
          */
-        void createUser(String email, String password) {
+        public void createUser(String email, String password) {
             waitingDialog.setIcon(R.drawable.ic_add_friend)
                     .setTitle("Registering....")
                     .setTopColorRes(R.color.colorPrimary)
@@ -220,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
          * @param email
          * @param password
          */
-        void signIn(String email, String password) {
+        public void signIn(String email, String password) {
             waitingDialog.setIcon(R.drawable.ic_person_low)
                     .setTitle("Login....")
                     .setTopColorRes(R.color.colorPrimary)
@@ -275,7 +274,7 @@ public class LoginActivity extends AppCompatActivity {
          *
          * @param email
          */
-        void resetPassword(final String email) {
+        public void resetPassword(final String email) {
             mAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -325,7 +324,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
         }
 
-        void saveUserInfo() {
+        public void saveUserInfo() {
             FirebaseDatabase.getInstance().getReference().child("user/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -345,7 +344,7 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
-        void initNewUserInfo() {
+        public void initNewUserInfo() {
             User newUser = new User();
             newUser.email = user.getEmail();
             newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
