@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidStudioProjects-InnoCrypt.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidStudioProjects-InnoCrypt.iml" group="InnoCrypt" />
       <module fileurl="file://$PROJECT_DIR$/InnoCrypt.iml" filepath="$PROJECT_DIR$/InnoCrypt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/InnoCrypt-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/InnoCrypt-app.iml" group="InnoCrypt/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
