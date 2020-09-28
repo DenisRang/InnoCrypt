@@ -17,11 +17,11 @@ Main functionality of chat application:
 [Functional requirements](https://docs.google.com/document/d/15llDxD5AHJPuF2XxkLv3TMSimGT3E5J0BqCsnb3sAtI/edit?usp=sharing)
 
 ### Registration
-![](images/registration.gif)
+![](https://i.ibb.co/pdrd3qm/registration.gif)
 
 ### Adding friends
-![](images/adding-friends.gif)
+![](https://i.ibb.co/fnDNzVy/adding-friends.gif)
 
 ### Chatting
-![](images/chatting.gif)
+![](https://i.ibb.co/1K1TRXj/chatting.gif)
 
